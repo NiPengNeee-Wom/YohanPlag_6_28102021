@@ -8,6 +8,7 @@ const sauceCtrl = require('../controllers/controllerssauce');
 // creation de middleware de test avec schema "test"
 
 router.post('/', auth, multer, sauceCtrl.createSauce);
+router.post('/:id/like', auth, sauceCtrl.likeAndDislike);
 router.put('/:id', auth, multer, sauceCtrl.modifySauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/:id', auth, sauceCtrl.getOneSauce);

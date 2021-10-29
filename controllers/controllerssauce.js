@@ -16,6 +16,52 @@ exports.createSauce = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
+exports.likeAndDislike = (req, res, next) => {
+    const like = parseInt(req.body.like);
+    if (like == 1){
+        Sauce.findOne({ _id: req.params.id })
+            .then(sauce => {
+                let testlike = sauce; 
+                testlike.likes++;
+                testlike.usersLiked.push(req.body.userId);
+                Sauce.updateOne({ _id: req.params.id }, { likes: testlike.likes, usersLiked: testlike.usersLiked, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Tu like ce produit !'}))
+                    .catch(error => res.status(400).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
+    }
+    else if (like == 0){
+        Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            let testlike = sauce; 
+            testlike.likes--;
+            console.log(testlike.usersLiked);
+            console.log(req.body.userId);
+            for (let i = 0; i<testlike.usersLiked.length; i++){
+                if(testlike.usersLiked[i] === req.body.userId){
+                    testlike.usersLiked.splice(i, 1);
+                };
+            };
+            Sauce.updateOne({ _id: req.params.id }, { likes: testlike.likes, usersLiked: testlike.usersLiked, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Tu ne like plus ce produit !'}))
+                .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
+    }
+    else if (like == -1){
+        Sauce.findOne({ _id: req.params.id })
+            .then(sauce => {
+                let testlike = sauce; 
+                testlike.likes--;
+                testlike.usersDisliked.push(req.body.userId);
+                Sauce.updateOne({ _id: req.params.id }, { likes: testlike.likes, usersDisliked: testlike.usersDisliked, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Tu n\'aime pas ce produit !'}))
+                    .catch(error => res.status(400).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
+    }
+};
+
 exports.modifySauce = (req, res, next) => {
     const thingObject = req.file ?
     {
