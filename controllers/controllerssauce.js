@@ -34,12 +34,14 @@ exports.likeAndDislike = (req, res, next) => {
         Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             let testlike = sauce; 
-            testlike.likes--;
-            console.log(testlike.usersLiked);
-            console.log(req.body.userId);
             for (let i = 0; i<testlike.usersLiked.length; i++){
                 if(testlike.usersLiked[i] === req.body.userId){
                     testlike.usersLiked.splice(i, 1);
+                    testlike.likes--;
+                };
+                if(testlike.usersDisliked[i] === req.body.userId){
+                    testlike.usersDisliked.splice(i, 1);
+                    testlike.likes++;
                 };
             };
             Sauce.updateOne({ _id: req.params.id }, { likes: testlike.likes, usersLiked: testlike.usersLiked, _id: req.params.id })
