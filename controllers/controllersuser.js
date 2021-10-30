@@ -13,11 +13,9 @@ exports.signup = (req, res, next) => {
       .save()
       .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
       .catch(() =>
-        res
-          .status(400)
-          .json({
-            message: "Un utilisateur existe déjà avec cette adresse e-mail",
-          })
+        res.status(400).json({
+          message: "Un utilisateur existe déjà avec cette adresse e-mail",
+        })
       );
   });
 };
@@ -36,9 +34,13 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
-              expiresIn: "24h",
-            }),
+            token: jwt.sign(
+              { userId: user._id },
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJpYXQiOjE0ODA5MjkyODIsImV4cCI6MTQ4MDkzMjg2OCwibmFtZSI6IlVzZXJuYW1lIn0gZeuWNbjO8kyEX92AjgX5oLy5qhu6YWTPr6vtYELZQ4",
+              {
+                expiresIn: "24h",
+              }
+            ),
           });
         })
         .catch((error) => res.status(500).json({ error }));
