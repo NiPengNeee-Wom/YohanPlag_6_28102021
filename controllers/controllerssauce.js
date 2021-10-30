@@ -18,7 +18,7 @@ exports.createSauce = (req, res, next) => {
 
 exports.likeAndDislike = (req, res, next) => {
     const like = parseInt(req.body.like);
-    if (like == 1){
+    if (like === 1){
         Sauce.findOne({ _id: req.params.id })
             .then(sauce => {
                 let testlike = sauce; 
@@ -30,33 +30,38 @@ exports.likeAndDislike = (req, res, next) => {
             })
             .catch(error => res.status(500).json({ error }));
     }
-    else if (like == 0){
-        Sauce.findOne({ _id: req.params.id })
-        .then(sauce => {
-            let testNoMore = sauce; 
-            for (let i = 0; i<testNoMore.usersLiked.length; i++){
-                if(testNoMore.usersLiked[i] === req.body.userId){
-                    testNoMore.usersLiked.splice(i, 1);
-                    testNoMore.likes--;
-                };
-                if(testNoMore.usersDisliked[i] === req.body.userId){
-                    testNoMore.usersDisliked.splice(i, 1);
-                    testNoMore.likes++;
-                };
-            };
-            Sauce.updateOne({ _id: req.params.id }, { likes: testNoMore.likes, usersLiked: testNoMore.usersLiked, _id: req.params.id })
-                .then(() => res.status(200).json({ message: 'Tu ne like plus ce produit !'}))
-                .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
-    }
-    else if (like == -1){
+    else if (like === 0){
         Sauce.findOne({ _id: req.params.id })
             .then(sauce => {
-                let testDislike = sauce; 
-                testDislike.likes--;
+                testNoMore = sauce; 
+                for (let i = 0; i<testNoMore.usersLiked.length; i++){
+                    if(testNoMore.usersLiked[i] === req.body.userId){
+                        testNoMore.usersLiked.splice(i, 1);
+                        testNoMore.likes--;
+                        Sauce.updateOne({ _id: req.params.id }, { likes: testNoMore.likes, usersLiked: testNoMore.usersLiked,  _id: req.params.id })
+                            .then(() => res.status(200).json({ message: 'Tu ne like plus ce produit !'}))
+                            .catch(error => res.status(400).json({ error }));
+                    }
+                }
+                for (let j = 0; j<testNoMore.usersDisliked.length; j++){
+                    if(testNoMore.usersDisliked[j] === req.body.userId){
+                        testNoMore.usersDisliked.splice(j, 1);
+                        testNoMore.dislikes--;
+                        Sauce.updateOne({ _id: req.params.id }, { dislikes: testNoMore.dislikes, usersDisliked: testNoMore.usersDisliked, _id: req.params.id })
+                            .then(() => res.status(200).json({ message: 'Tu ne dislike plus ce produit !'}))
+                            .catch(error => res.status(400).json({ error }));
+                    };
+                };
+            })
+            .catch(error => res.status(500).json({ error }));
+    }
+    else if (like === -1){
+        Sauce.findOne({ _id: req.params.id })
+            .then(sauce => {
+                let testDislike = sauce;
+                testDislike.dislikes++;
                 testDislike.usersDisliked.push(req.body.userId);
-                Sauce.updateOne({ _id: req.params.id }, { likes: testDislike.likes, usersDisliked: testDislike.usersDisliked, _id: req.params.id })
+                Sauce.updateOne({ _id: req.params.id }, { dislikes: testDislike.dislikes, usersDisliked: testDislike.usersDisliked, _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Tu n\'aime pas ce produit !'}))
                     .catch(error => res.status(400).json({ error }));
             })
