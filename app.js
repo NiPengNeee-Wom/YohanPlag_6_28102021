@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-// const rateLimit = require("express-rate-limit");       // ratelimiter à réactiver pour montrer au Jury
+const rateLimit = require("express-rate-limit"); // ratelimiter à réactiver pour montrer au Jury
 const helmet = require("helmet"); // sécurité suplementaire Headers
 const sauceRoutes = require("./routes/routesauce");
 const userRoutes = require("./routes/routeuser");
@@ -31,14 +31,15 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use(helmet());
-// app.use(
-//   rateLimit({
-//     windowMs: 12 * 60 * 60 * 1000,
-//     message:
-//       "Vous avez effectué plus de 100 requetes dans une limite de 12 heures!",
-//     headers: true,
-//   })
-// );
+app.use(
+  rateLimit({
+    windowMs: 24 * 60 * 60 * 1000,
+    max: 100,
+    message:
+      "Vous avez effectué plus de 100 requétes dans une limite de 24 heures!",
+    headers: true,
+  })
+);
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/sauces", sauceRoutes);
