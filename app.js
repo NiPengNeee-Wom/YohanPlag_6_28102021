@@ -8,7 +8,7 @@ const sauceRoutes = require("./routes/routesauce");
 const userRoutes = require("./routes/routeuser");
 
 mongoose
-  .connect(process.env.BCRYPT_KEY, {
+  .connect(process.env.MONGOOSE_KEY, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
