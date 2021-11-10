@@ -1,16 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const dotenv = require("dotenv").config();
 // const rateLimit = require("express-rate-limit"); // ratelimiter à réactiver pour montrer au Jury
-const helmet = require("helmet"); // sécurité suplementaire Headers
+// const helmet = require("helmet"); // sécurité suplementaire Headers
 const sauceRoutes = require("./routes/routesauce");
 const userRoutes = require("./routes/routeuser");
 
 mongoose
-  .connect(
-    "mongodb+srv://yohan:1y5f9l3p5v7aAze@cluster0.6z8pb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.BCRYPT_KEY, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.use(helmet());
+// app.use(helmet());
 // app.use(
 //   rateLimit({
 //     windowMs: 24 * 60 * 60 * 1000,
