@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv").config({ encoding: "latin1" });
-const rateLimit = require("express-rate-limit"); // ratelimiter à réactiver pour montrer au Jury
-const helmet = require("helmet"); // sécurité suplementaire Headers
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 const sauceRoutes = require("./routes/routesauce");
 const userRoutes = require("./routes/routeuser");
 const mongoose = require("mongoose");
