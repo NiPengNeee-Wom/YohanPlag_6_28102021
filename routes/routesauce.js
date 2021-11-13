@@ -5,7 +5,6 @@ const auth = require("../middleware/auth");
 const multer = require("../middleware/multer-config");
 
 const sauceCtrl = require("../controllers/controllerssauce");
-// creation de middleware de test avec schema "test"
 
 router.post("/", auth, multer, sauceCtrl.createSauce);
 router.post("/:id/like", auth, sauceCtrl.likeAndDislike);

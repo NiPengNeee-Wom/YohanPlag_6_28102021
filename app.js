@@ -1,11 +1,11 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const path = require("path");
 const dotenv = require("dotenv").config({ encoding: "latin1" });
 const rateLimit = require("express-rate-limit"); // ratelimiter à réactiver pour montrer au Jury
 const helmet = require("helmet"); // sécurité suplementaire Headers
 const sauceRoutes = require("./routes/routesauce");
 const userRoutes = require("./routes/routeuser");
+const mongoose = require("mongoose");
 
 mongoose
   .connect(process.env.MONGOOSE_KEY, {
@@ -31,6 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
 app.use(helmet());
 app.use(
   rateLimit({
